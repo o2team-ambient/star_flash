@@ -1,0 +1,11 @@
+{
+  "author": "src",
+  "demoUrl": "//o2team-ambient.github.io/star-flash/dist/",
+  "miniDemoUrl": "//o2team-ambient.github.io/star-flash/dist/index_demo.html",
+  "title": "star-flash",
+  "ambName": "星星闪烁",
+  "github": "https://github.com/o2team-ambient/star-flash",
+  "demoSnippet": "{{__snippet__}}",
+  "controlUrl": "{{__control__}}",
+  "configUrl": "{{__config__}}"
+}
