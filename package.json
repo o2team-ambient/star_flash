@@ -11,7 +11,8 @@
   "author": "src",
   "license": "ISC",
   "dependencies": {
-    "@o2team/ambient-dat.gui": "^0.7.9"
+    "@o2team/ambient-dat.gui": "^0.7.9",
+    "@tweenjs/tween.js": "^17.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",

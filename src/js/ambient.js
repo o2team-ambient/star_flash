@@ -25,11 +25,12 @@ const opt = {
 // 初始化函数
 export default function initAmbient () {
   const canvas = wrapper.querySelector('canvas')
-  console.log(canvas)
+
   let animate = new Animate({
     canvas,
     ...opt
   })
+  animate.play()
   // let xxx = new XXX()
   // 主函数暴露，用于联动配置，！！！必需暴露！！！
   // 动效类中必须带 reset 方法，并有重置动画的功能，传参为 window[O2_AMBIENT_CONFIG] 配置
