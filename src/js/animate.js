@@ -1,5 +1,4 @@
 import Widget from "./widget";
-import TWEEN from '@tweenjs/tween.js'
 
 class Animate{
   props = {
@@ -42,7 +41,7 @@ class Animate{
     this.clearRect()
 
     this.update(time)
-    this.draw(time)
+    this.draw()
     requestAnimationFrame(this.startTick.bind(this))
   }
   

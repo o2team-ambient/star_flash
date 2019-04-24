@@ -50,9 +50,10 @@ class Widget{
 
     const factor = Easing.Back.Out(time / _target.duration)
     let newStyle = {}
-    for (let property in _target.style){
-      newStyle[property] = startStyle[property] + factor * (_target.style[property] - startStyle[property])
-    }
+    for( let key in _target.style){}
+    Object.keys(_target.style).forEach(i =>{
+      newStyle[i] = startStyle[i] + factor * (_target.style[i] - startStyle[i])
+    })
     this.getStarPos({ ...startStyle, ...newStyle})
   }
 
