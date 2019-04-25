@@ -1,76 +1,166 @@
-import Easing from './tween.easing'
 
 class Widget{
+  lineConnectPx = 10
+  lineSpacePx = 10
+  lineConnectPoint = 5
+  timer = 0
+  scaleFactorStar = 1.1
+  
   props = {
-    startStyle:{ minR: 60, maxR:100, x:100, y:100},
-    // toQueue:[{x:100, y:200, duration:1000}],
-    toQueue: [
-      { style: { minR: 60 * 0.5, maxR: 100 * 0.5}, duration: 1000 }
-    ],
-
-    curTime: 0,
-    curQueueIndex:0
+    lineColor: '#fff',
+    pendantColor: '#fff',
+    pendantBorderColor: '#fff',
+    pendantShadowColor: '#fff',
+    pendantShadowBlur: 10,
+    lineStyle: {
+      width: 1,
+      y: 0
+    }
   }
 
-  constructor({ ctx }) {
+  constructor({ ctx, props}) {
+    this.props = {...this.props, ...props}
+    
+    const { 
+      x, 
+      keepTime,
+      lineStyle,
+      lineHeight
+    } = this.props
+
     this.ctx = ctx
-    this.particles = []
-    const { startStyle } = this.props
-    this.getStarPos(startStyle)
+    this.initStarStyle = { 
+      minR: 4, 
+      maxR: 8, 
+      x
+    }
+    this.initLineStyle = {
+      x, 
+      lineHeight,
+      ...lineStyle
+    }
+
+    this.keepTime = keepTime || 200
+
+    this.init()
   }
 
-  getStarPos({ minR, maxR, x, y}) {
-    this.particles = []
+  init () {
+    this.draw()
+  }
+
+  update (time) {
+    this.draw(time)
+  }
+
+  getStarPos({ minR, maxR, x, lineHeight}) {
+    let ret =  []
     const pi = 180 / Math.PI
     const DEG = 72
     for (let i = 0; i < 5; i++) {
       const x1 = Math.cos((54 + i * DEG) / pi) * maxR + x
-      const y1 = Math.sin((54 + i * DEG) / pi) * maxR + y
+      const y1 = Math.sin((54 + i * DEG) / pi) * maxR + lineHeight
       const x2 = Math.cos((18 + i * DEG) / pi) * minR + x
-      const y2 = Math.sin((18 + i * DEG) / pi) * minR + y
-      this.particles.push({
+      const y2 = Math.sin((18 + i * DEG) / pi) * minR + lineHeight
+      ret.push({
         x1, y1, x2, y2
       })
     }
+    return ret
   }
 
-  update (time) {
-    let { curTime, toQueue, startStyle, curQueueIndex} = this.props
-    if (!curTime) this.props.curTime = time
-    time = time - curTime
+  drawStar(time, lineHeight) {
+    const { 
+      ctx, 
+      keepTime, 
+      initStarStyle, 
+      scaleFactorStar, 
+      props 
+    } = this
+    
+    const { 
+      pendantColor,
+      pendantborderColor,
+      pendantShadowBlur, 
+      pendantShadowColor,
+    } = props
 
-    const _target = toQueue[curQueueIndex]
-    // if (time > toQueue[curQueueIndex].duration){
-    //   ++curQueueIndex >= toQueue.length ? 0 : curQueueIndex
-    // }
+    const dt = time - this.timer
+    let particles = []
 
-    if (time > _target.duration) {
-      return true
+    ctx.save()
+    if (dt > keepTime) {
+      ctx.shadowColor = pendantShadowColor
+      ctx.shadowBlur = pendantShadowBlur
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 0
+      particles = this.getStarPos({ 
+        ...initStarStyle, 
+        minR: initStarStyle.minR * scaleFactorStar, 
+        maxR: initStarStyle.maxR * scaleFactorStar, 
+        lineHeight,
+      })
+    } else {
+      particles = this.getStarPos({ 
+        lineHeight, 
+        ...initStarStyle
+      })
     }
 
-    const factor = Easing.Back.Out(time / _target.duration)
-    let newStyle = {}
-    for( let key in _target.style){}
-    Object.keys(_target.style).forEach(i =>{
-      newStyle[i] = startStyle[i] + factor * (_target.style[i] - startStyle[i])
-    })
-    this.getStarPos({ ...startStyle, ...newStyle})
-  }
-
-  draw() {
-    const { ctx } = this
+    if (dt > keepTime * 2) {
+      this.timer = time
+    }
 
     ctx.beginPath()
-    this.particles.forEach(p => {
+    particles.forEach(p => {
       ctx.lineTo(p.x2, p.y2)
       ctx.lineTo(p.x1, p.y1)
     })
     ctx.closePath()
-    ctx.strokeStyle = '#f00'
-    ctx.fillStyle = '#f00'
+    ctx.strokeStyle = pendantborderColor
+    ctx.fillStyle = pendantColor
     ctx.fill()
     ctx.stroke()
+
+    ctx.restore()
   }
+
+  drawLine () {
+    const { ctx, initLineStyle, lineConnectPx, lineConnectPoint, lineSpacePx } = this
+    const { lineColor } = this.props
+    const { 
+      x, 
+      y, 
+      width, 
+      lineHeight
+    } = initLineStyle
+
+    const longY = y + lineHeight
+
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+    ctx.lineTo(x, longY)
+
+    let dy = 0
+
+    for (let i = 1; i <= lineConnectPoint; i++){
+      dy = longY + Math.pow(i, 1.5) * lineConnectPx / lineConnectPoint
+      ctx.moveTo(x, dy)
+      ctx.lineTo(x, dy + 2)
+    }
+    ctx.strokeStyle = lineColor
+    ctx.lineWidth = width
+    ctx.stroke()
+
+    //line finally height
+    return dy + lineConnectPx + lineSpacePx
+  }
+
+  draw(time) {
+    const lineHeight = this.drawLine()
+    this.drawStar(time, lineHeight)
+  }
+
 }
 
 export default Widget
