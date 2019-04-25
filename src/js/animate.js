@@ -4,10 +4,10 @@ class Animate{
   props = {
     width:window.innerWidth,
     height:window.innerHeight,
-    maxHeight: 200,
-    widgetNumber: 10,
-    layoutType: 'curtain',
-    heightType: 'fixed',
+    maxHeight: 100,
+    widgetNumber: 21,
+    layoutType: 'curtain', //random, certain or normal
+    heightType: '', // fixed or ''
   }
   data = {}
   constructor ({canvas, props}) {
@@ -46,8 +46,8 @@ class Animate{
 
     let arr = []
 
-    for (let i = 0; i < widgetNumber; i++) {
-      const dx = width / widgetNumber
+    for (let i = 1; i <= widgetNumber; i++) {
+      const dx = width / (widgetNumber + 1)
       let keepTime = ~~(200 + 100 * (0.5 - Math.random()))
       let lineHeight = heightType === 'fixed' ? maxHeight : ~~(Math.random() * maxHeight)
       let x
@@ -63,23 +63,38 @@ class Animate{
         }
         while (!isSplit && i && limit)
 
-      } else if (layoutType === 'curtain'){
-        const midNumber = widgetNumber / 2
+      } else if (layoutType === 'curtain') {
+        const midNumber = (widgetNumber + 1) / 2
         const dh = ~~(maxHeight / midNumber )
-        x = dx * i + 10
+        x = dx * i
         lineHeight = dh * Math.abs(~~(midNumber) - i)
       } else {
-        x = dx * i + 20
+        x = dx * i
+      }
+
+      const color = this.randomRGB()
+      let colorStyle = {
+        pendantColor: color,
       }
 
       arr.push({
         x, 
         lineHeight, 
-        keepTime
+        keepTime,
+        ...colorStyle
       })
     }
 
     return arr
+  }
+
+  randomRGB () {
+    const arr = []
+    let i = 3
+    while(i--){
+      arr.push(~~(255 * Math.random()))
+    }
+    return `rgb(${arr.join(',')})`
   }
   
   createWidget () {

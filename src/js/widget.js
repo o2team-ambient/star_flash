@@ -5,6 +5,7 @@ class Widget{
   lineConnectPoint = 5
   timer = 0
   scaleFactorStar = 1.1
+  keepTime = 200
   
   props = {
     lineColor: '#fff',
@@ -14,33 +15,24 @@ class Widget{
     pendantShadowBlur: 10,
     lineStyle: {
       width: 1,
-      y: 0
+      y: 0,
+      lineHeight: 0
+    },
+    starStyle: {
+      minR: 4,
+      maxR: 8, 
     }
   }
 
-  constructor({ ctx, props}) {
+  constructor({ctx, props}) {
     this.props = {...this.props, ...props}
-    
-    const { 
-      x, 
-      keepTime,
-      lineStyle,
-      lineHeight
-    } = this.props
+    const { x, keepTime, lineHeight } = this.props
 
     this.ctx = ctx
-    this.initStarStyle = { 
-      minR: 4, 
-      maxR: 8, 
-      x
-    }
-    this.initLineStyle = {
-      x, 
-      lineHeight,
-      ...lineStyle
-    }
-
-    this.keepTime = keepTime || 200
+    this.props.starStyle.x = x
+    this.props.lineStyle.x = x
+    this.props.lineStyle.lineHeight = lineHeight
+    this.keepTime = keepTime || this.keepTime
 
     this.init()
   }
@@ -73,14 +65,14 @@ class Widget{
     const { 
       ctx, 
       keepTime, 
-      initStarStyle, 
       scaleFactorStar, 
       props 
     } = this
     
     const { 
+      starStyle,
       pendantColor,
-      pendantborderColor,
+      pendantBorderColor,
       pendantShadowBlur, 
       pendantShadowColor,
     } = props
@@ -89,21 +81,22 @@ class Widget{
     let particles = []
 
     ctx.save()
+
     if (dt > keepTime) {
       ctx.shadowColor = pendantShadowColor
       ctx.shadowBlur = pendantShadowBlur
       ctx.shadowOffsetX = 0
       ctx.shadowOffsetY = 0
       particles = this.getStarPos({ 
-        ...initStarStyle, 
-        minR: initStarStyle.minR * scaleFactorStar, 
-        maxR: initStarStyle.maxR * scaleFactorStar, 
+        ...starStyle, 
+        minR: starStyle.minR * scaleFactorStar, 
+        maxR: starStyle.maxR * scaleFactorStar, 
         lineHeight,
       })
     } else {
       particles = this.getStarPos({ 
         lineHeight, 
-        ...initStarStyle
+        ...starStyle
       })
     }
 
@@ -117,7 +110,7 @@ class Widget{
       ctx.lineTo(p.x1, p.y1)
     })
     ctx.closePath()
-    ctx.strokeStyle = pendantborderColor
+    ctx.strokeStyle = pendantBorderColor
     ctx.fillStyle = pendantColor
     ctx.fill()
     ctx.stroke()
@@ -126,14 +119,9 @@ class Widget{
   }
 
   drawLine () {
-    const { ctx, initLineStyle, lineConnectPx, lineConnectPoint, lineSpacePx } = this
-    const { lineColor } = this.props
-    const { 
-      x, 
-      y, 
-      width, 
-      lineHeight
-    } = initLineStyle
+    const { ctx, lineConnectPx, lineConnectPoint, lineSpacePx } = this
+    const { lineColor, lineStyle} = this.props
+    const { x, y, width, lineHeight } = lineStyle
 
     const longY = y + lineHeight
 
