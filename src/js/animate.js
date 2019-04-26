@@ -1,20 +1,38 @@
 import Widget from "./widget";
+import {
+  O2_AMBIENT_CONFIG
+} from './utils/const'
 
 class Animate{
   props = {
-    width:window.innerWidth,
-    height:window.innerHeight,
-    maxHeight: 100,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    maxHeight: 200,
     widgetNumber: 21,
     layoutType: 'curtain', //random, certain or normal
-    heightType: '', // fixed or ''
+    heightType: 'random', // fixed or random
+    colorType: 'random', //random or fixed
+    lineColor: '#fff',
+    pendantColor: '#fff',
+    pendantBorderColor: '#fff',
+    pendantShadowColor: '#fff',
+    pendantShadowBlur: 10,
   }
-  data = {}
-  constructor ({canvas, props}) {
-    Object.assign(this.props, props)
+
+  statusType = {
+    INIT: -1,
+    PLAY: 0,
+    PAUSE: 1,
+    STOP: 2
+  }
+  status = -1
+  rafId = 0
+
+  constructor ({canvas}) {
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')
 
+    this.setProps()
     this.init()
   }
 
@@ -24,6 +42,10 @@ class Animate{
     canvas.setAttribute('width', width)
     canvas.setAttribute('height', height)
     canvas.style.background = '#000'
+  }
+
+  setProps () {
+    this.props = {...this.props, ...window[O2_AMBIENT_CONFIG]}
   }
 
   init () {
@@ -41,14 +63,20 @@ class Animate{
       maxHeight, 
       widgetNumber, 
       layoutType,
-      heightType
+      heightType,
+      colorType,
+      pendantColor,
+      lineColor,
+      pendantBorderColor,
+      pendantShadowColor,
+      pendantShadowBlur,
     } = this.props
 
     let arr = []
 
     for (let i = 1; i <= widgetNumber; i++) {
       const dx = width / (widgetNumber + 1)
-      let keepTime = ~~(200 + 100 * (0.5 - Math.random()))
+      let keepTime = ~~(this.props.keepTime + 100 * (0.5 - Math.random()))
       let lineHeight = heightType === 'fixed' ? maxHeight : ~~(Math.random() * maxHeight)
       let x
 
@@ -72,9 +100,13 @@ class Animate{
         x = dx * i
       }
 
-      const color = this.randomRGB()
+      const color = colorType ==='random'? this.randomRGB() : pendantColor
       let colorStyle = {
         pendantColor: color,
+        lineColor,
+        pendantBorderColor,
+        pendantShadowColor,
+        pendantShadowBlur,
       }
 
       arr.push({
@@ -109,7 +141,7 @@ class Animate{
     this.widgets.forEach((widget)=>{
       widget.update(time)
     })
-    requestAnimationFrame(this.startTick.bind(this))
+    this.rafId = requestAnimationFrame(this.startTick.bind(this))
   }
   
   clearRect () {
@@ -119,11 +151,28 @@ class Animate{
   }
 
   play () {
+    this.status = this.statusType['PLAY']
     this.startTick(0)
   }
 
-  reset () {
+  pause () {
+    this.status = this.statusType['PAUSE']
+    cancelAnimationFrame(this.rafId)
+  }
 
+  toggle () {
+    if(this.status !== this.statusType['PLAY']){
+      this.play()
+    } else {
+      this.pause()
+    }
+  }
+
+  reset () {
+    this.pause()
+    this.setProps()
+    this.createWidget()
+    this.play()
   }
 }
 
