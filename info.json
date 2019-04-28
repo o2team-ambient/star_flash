@@ -5,7 +5,7 @@
   "title": "star-flash",
   "ambName": "星星闪烁",
   "github": "https://github.com/o2team-ambient/star-flash",
-  "demoSnippet": "{{__snippet__}}",
-  "controlUrl": "{{__control__}}",
-  "configUrl": "{{__config__}}"
+  "demoSnippet": "<link href=\"//storage.jd.com/ambient/styles-star-flash.css?t=1556254219000\" rel=\"stylesheet\"></link><!-- S 主体内容 -->\r\n  <div class=\"o2team_ambient_main\">\r\n    <canvas></canvas>\r\n  </div>\r\n  <!-- E 主体内容 --><script src=\"//storage.jd.com/ambient/bundle-star-flash.js?t=1556254219000\"></script>",
+  "controlUrl": "//storage.jd.com/ambient/control-star-flash.js?t=1556254219000",
+  "configUrl": "//storage.jd.com/ambient/config-star-flash.js?t=1556254219000"
 }
