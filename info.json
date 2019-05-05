@@ -5,9 +5,9 @@
   "title": "star-flash",
   "ambName": "星星闪烁",
   "github": "https://github.com/o2team-ambient/star-flash",
-  "demoSnippet": "<link href=\"//storage.jd.com/ambient/styles-star-flash.css?t=1557049806000\" rel=\"stylesheet\"></link><!-- S 主体内容 -->\r\n  <div class=\"o2team_ambient_main\">\r\n    <canvas></canvas>\r\n  </div>\r\n  <!-- E 主体内容 --><script src=\"//storage.jd.com/ambient/bundle-star-flash.js?t=1557049806000\"></script>",
-  "controlUrl": "//storage.jd.com/ambient/control-star-flash.js?t=1557049806000",
-  "configUrl": "//storage.jd.com/ambient/config-star-flash.js?t=1557049806000",
+  "demoSnippet": "<link href=\"//storage.jd.com/ambient/styles-star-flash.css?t=1557054676000\" rel=\"stylesheet\"></link><!-- S 主体内容 -->\r\n  <div class=\"o2team_ambient_main\">\r\n    <canvas></canvas>\r\n  </div>\r\n  <!-- E 主体内容 --><script src=\"//storage.jd.com/ambient/bundle-star-flash.js?t=1557054676000\"></script>",
+  "controlUrl": "//storage.jd.com/ambient/control-star-flash.js?t=1557054676000",
+  "configUrl": "//storage.jd.com/ambient/config-star-flash.js?t=1557054676000",
   "placeholderImg": "//storage.jd.com/ambient/star-flash_placeholder.png?t=1557049231000",
   "spriteImg": "//storage.jd.com/ambient/star-flash_sprite.png?t=1557049231000"
 }
