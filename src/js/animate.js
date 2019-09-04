@@ -41,7 +41,7 @@ class Animate{
     const { canvas } = this
     canvas.setAttribute('width', width)
     canvas.setAttribute('height', height)
-    canvas.style.background = '#000'
+    // canvas.style.background = '#000'
   }
 
   setProps () {
